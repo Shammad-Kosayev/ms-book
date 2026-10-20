@@ -19,6 +19,7 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -42,6 +43,8 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'software.amazon.awssdk:s3:2.25.0'
+
+    implementation 'com.shammad:scroll-lib-common:1.0.0'
 
     // for populating data
 //	implementation 'net.datafaker:datafaker:2.2.2'
