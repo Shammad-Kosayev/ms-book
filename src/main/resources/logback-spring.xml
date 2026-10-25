@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Include Spring Boot's default logging configuration -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Fetch the application name from application.properties / application.yml -->
+    <springProperty scope="context" name="springAppName" source="spring.application.name" defaultValue="my-spring-boot-app"/>
+
+    <!-- 1. Console Appender for local viewing -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 2. Logstash TCP Appender -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!-- Point this to your Logstash host and port -->
+        <destination>localhost:5000</destination>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- Inject the application name as a custom JSON field -->
+            <customFields>{"app_name":"${springAppName}"}</customFields>
+        </encoder>
+    </appender>
+
+    <!-- 3. Root Logger configuration -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOGSTASH"/>
+    </root>
+</configuration>
